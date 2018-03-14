@@ -1,8 +1,5 @@
 <template>
   <div class="editor__container">
-    <transition name="popup-fade">
-      <div v-if="isProcessing" class="processing-overlay"></div>
-    </transition>
     <div class="editor__controls">
       <div v-if="!el.hide" class="editor__box" :class="el.color" v-for="(el, index) in elements">
         <div v-if="!el.isPreview" class="editor__box-toggle" :class="{'closed': !el.isOpen}" @click="el.isOpen = !el.isOpen"></div>
@@ -75,8 +72,7 @@ export default {
       aframeCode: 'aframeCode',
       sceneToLoad: 'sceneToLoad',
       modelStructure: 'modelStructure',
-      shortId: 'shortId',
-      isProcessing: 'isProcessing'
+      shortId: 'shortId'
     })
   },
   methods: {

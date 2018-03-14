@@ -5,10 +5,9 @@ import Creator from '@/components/creator'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
   routes: [
     {
-      path: '/:shortCode?',
+      path: '/',
       name: 'Creator',
       component: Creator
     }
