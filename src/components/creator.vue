@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <visual-editor class="column--content"></visual-editor>
-    <aframe-view class="column" :style="{width: lastColumn + 'px'}"></aframe-view>
+    <aframe-view id="app-container" class="column" :style="{width: lastColumn + 'px'}"></aframe-view>
   </div>
 </template>
 

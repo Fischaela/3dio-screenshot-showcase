@@ -11,11 +11,6 @@ module.exports = {
         error: false,
         val: null,
         method: 'pushScene'
-      },
-      'scn-text': {
-        text: 'Get a scene url from your <a href="https://spaces.archilogic.com/dashboard" target="_blank">dashboard</a> or let us create a new scene for you from a floor plan <a href="https://spaces.archilogic.com/order" target="_blank">here</a>',
-        id: 'load-furniture',
-        type: 'text'
       }
     }
   },
@@ -40,7 +35,7 @@ module.exports = {
       },
       'lg-text': {
         condition: 'elements.logo.ctrl.lg-ckbx.val',
-        text: 'Use ideally a svg or a png with transparency - not wider than 200px',
+        text: 'Use ideally a png with transparency - not wider than 200px',
         type: 'text'
       },
       'lg-upload': {
@@ -122,6 +117,32 @@ module.exports = {
         placeholder: 'enter your file key',
         val: null,
         method: 'pushSkyImg'
+      }
+    }
+  },
+  screenshot: {
+    name: 'Screenshot',
+    isOpen: true,
+    ctrl: {
+      'screenshot-width': {
+        label: 'Width',
+        id: 'screenshot-width',
+        type: 'input',
+        method: 'changeWidth',
+        val: null
+      },
+      'screenshot-height': {
+        label: 'Height',
+        id: 'screenshot-height',
+        type: 'input',
+        method: 'changeHeight',
+        val: null
+      },
+      'screenshot-btn': {
+        label: 'Take Screenshot',
+        id: 'screenshot-btn',
+        type: 'button',
+        method: 'takeScreenshot'
       }
     }
   }

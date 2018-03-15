@@ -10,7 +10,7 @@
           <label v-if="c.label && (c.type === 'checkbox' || c.type === 'input')" :for="key" class="editor__box-label">{{c.label}}</label>
           <input v-if="c.type === 'input'" class="editor__box-input" v-model="c.val" :placeholder="c.placeholder" @input="runMethod(c.method)">
           <textarea v-if="c.type === 'textarea'" class="editor__box-textarea" v-model="c.val" :placeholder="c.placeholder" @input="runMethod(c.method)"></textarea>
-          <button v-if="c.type === 'button'" class="editor__box-button" v-model="c.val" @click="(c.method ? runMethod(c.method) : $store.commit(c.mutation))">{{c.buttonText}}</button>
+          <button v-if="c.type === 'button'" class="editor__box-button" v-model="c.val" @click="(c.method ? runMethod(c.method) : $store.commit(c.mutation))">{{c.label}}</button>
           <vue-slider v-if="c.type === 'slider'"
                       class="editor__box-slider"
                       v-model="c.val"
@@ -44,6 +44,8 @@ import ImageUpload from './image-upload'
 import prettifyHtml from '../js/prettify-html'
 import htmlSnippets from '../js/html-code-snippets'
 import io3d from '3dio'
+import html2canvas from 'html2canvas'
+import fileSaver from 'file-saver'
 
 export default {
   name: 'visual-editor',
@@ -283,6 +285,13 @@ export default {
         this.elements.sky.ctrl['bkgrnd-inpt'].val = el.url
         this.pushSkyImg()
       }
+    },
+    takeScreenshot: function () {
+      html2canvas(document.querySelector('#app-container')).then(canvas => {
+        canvas.toBlob(function (blob) {
+          fileSaver.saveAs(blob, 'myScreenshot.png')
+        })
+      })
     }
   }
 }

@@ -39,7 +39,11 @@ export default {
 
       const iframeDoc = iframe.contentWindow.document
       iframeDoc.open()
-      iframeDoc.write(this.aframeCode)
+
+      // remove VR button
+      let newCode = this.aframeCode.replace('<a-scene', '<a-scene vr-mode-ui="enabled: false"')
+
+      iframeDoc.write(newCode)
       iframeDoc.close()
     }, 500)
   },
