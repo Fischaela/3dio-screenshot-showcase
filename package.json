@@ -10,9 +10,7 @@
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
-    "lint": "eslint --ext .js,.vue src test/unit/specs",
-    "deploy-testing": "node build/build.js && directory-to-s3 -v -d dist/ appcreator-testing.3d.io",
-    "deploy-production": "node build/build.js && directory-to-s3 -v -d dist/ appcreator.3d.io"
+    "lint": "eslint --ext .js,.vue src test/unit/specs"
   },
   "dependencies": {
     "3dio": "1.1.5",
