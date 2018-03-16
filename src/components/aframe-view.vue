@@ -1,6 +1,6 @@
 <template>
   <div class="app__container">
-    <div id="aframe-wrapper">
+    <div id="aframe-wrapper" class="app__wrapper">
       <iframe id="aframe-view" src="about:blank" class="app__iframe"></iframe>
     </div>
   </div>
@@ -39,7 +39,11 @@ export default {
 
       const iframeDoc = iframe.contentWindow.document
       iframeDoc.open()
-      iframeDoc.write(this.aframeCode)
+
+      // remove VR button
+      let newCode = this.aframeCode.replace('<a-scene', '<a-scene vr-mode-ui="enabled: false"')
+
+      iframeDoc.write(newCode)
       iframeDoc.close()
     }, 500)
   },
@@ -54,9 +58,9 @@ export default {
   @import '../styles/config.less';
   .app {
     &__container {
-      height: ~"calc(100vh - @{headerSmall})";
+      height: 100%;
       overflow: hidden;
-      width: 45%;
+      width: 100%;
       position: relative;
       &.embed {
         height: 100vh;
@@ -68,13 +72,17 @@ export default {
     }
     &__iframe {
       width: 100%;
-      height: ~"calc(100vh - @{headerSmall})";
+      height: 100%;
       border: 0;
       margin: 0;
       padding: 0;
       &.embed {
         height: 100vh;
       }
+    }
+    &__wrapper {
+      width: 100%;
+      height: 100%;
     }
   }
 </style>

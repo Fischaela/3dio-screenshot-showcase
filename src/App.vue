@@ -1,18 +1,20 @@
 <template>
   <div id="app">
     <header-bar></header-bar>
-    <router-view></router-view>
+    <creator></creator>
   </div>
 </template>
 
 <script>
 
 import HeaderBar from './components/header-bar'
+import Creator from './components/creator'
 
 export default {
   name: 'app',
   components: {
-    'header-bar': HeaderBar
+    'header-bar': HeaderBar,
+    'creator': Creator
   },
   methods: {
     initApp () {
