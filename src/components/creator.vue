@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <visual-editor class="column--content"></visual-editor>
-    <aframe-view id="app-container" class="column" :style="{width: lastColumn + 'px'}"></aframe-view>
+    <div class="screenshot__canvas" :style="{width: lastColumn + 'px'}">
+      <aframe-view id="app-container" class="column screenshot__content" :style="{width: screenshotWidth + 'px', height: screenshotHeight + 'px'}"></aframe-view>
+    </div>
   </div>
 </template>
 
@@ -22,7 +24,8 @@ export default {
       aframeCode: 'aframeCode',
       shortId: 'shortId',
       appTitle: 'appTitle',
-      isTemplate: 'isTemplate'
+      isTemplate: 'isTemplate',
+      screenshotDimensions: 'screenshotDimensions'
     }),
     lastColumn: function () {
       return this.innerWidth - 350
@@ -34,6 +37,12 @@ export default {
         if (this.columns[i].isVisible) mode += s
       })
       return mode === '' ? 'a' : mode
+    },
+    screenshotWidth: function () {
+      return this.screenshotDimensions.width || 1024
+    },
+    screenshotHeight: function () {
+      return this.screenshotDimensions.height || 768
     }
   },
   components: {
@@ -77,4 +86,17 @@ export default {
       cursor: pointer;
     }
   }
+  .screenshot {
+
+    &__canvas {
+      position: relative;
+    }
+    &__content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
 </style>

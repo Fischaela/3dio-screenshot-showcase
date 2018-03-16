@@ -11,20 +11,28 @@ const debug = process.env.NODE_ENV !== 'production'
 const state = {
   aframeCode: '',
   sceneToLoad: false,
-  modelStructure: null
+  modelStructure: null,
+  screenshotDimensions: {
+    width: null,
+    height: null
+  }
 }
 
 // getters
 const getters = {
   aframeCode: state => state.aframeCode,
   sceneToLoad: state => state.sceneToLoad,
-  modelStructure: state => state.modelStructure
+  modelStructure: state => state.modelStructure,
+  screenshotDimensions: state => state.screenshotDimensions
 }
 
 // mutations
 const mutations = {
   [types.UPDATE_CODE] (state, data) {
     state.aframeCode = data
+  },
+  [types.UPDATE_SCREENSHOT] (state, data) {
+    state.screenshotDimensions = data
   },
   [types.SET_SCENE] (state, id) {
     state.sceneToLoad = id

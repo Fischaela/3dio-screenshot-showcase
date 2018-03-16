@@ -292,6 +292,17 @@ export default {
           fileSaver.saveAs(blob, 'myScreenshot.png')
         })
       })
+    },
+    changeScreenshotDimensions: function () {
+      console.log(this)
+      const widthInput = this.elements.screenshot.ctrl['screenshot-width'].val
+      const heightInput = this.elements.screenshot.ctrl['screenshot-height'].val
+      const dimensions = {
+        width: widthInput,
+        height: heightInput
+      }
+
+      this.$store.commit('UPDATE_SCREENSHOT', dimensions)
     }
   }
 }

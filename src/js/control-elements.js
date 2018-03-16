@@ -128,14 +128,14 @@ module.exports = {
         label: 'Width',
         id: 'screenshot-width',
         type: 'input',
-        method: 'changeWidth',
+        method: 'changeScreenshotDimensions',
         val: null
       },
       'screenshot-height': {
         label: 'Height',
         id: 'screenshot-height',
         type: 'input',
-        method: 'changeHeight',
+        method: 'changeScreenshotDimensions',
         val: null
       },
       'screenshot-btn': {
