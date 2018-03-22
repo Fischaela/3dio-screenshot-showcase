@@ -9,7 +9,11 @@ const debug = process.env.NODE_ENV !== 'production'
 
 // initial state
 const state = {
-  aframeCode: '',
+  aframeCode: `
+    <a-scene>
+      <a-sky color="#6EBAA7"></a-sky>
+    </a-scene>
+  `,
   sceneToLoad: false,
   modelStructure: null,
   screenshotDimensions: {

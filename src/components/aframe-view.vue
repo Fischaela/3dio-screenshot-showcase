@@ -1,7 +1,11 @@
 <template>
   <div class="app__container">
     <div id="aframe-wrapper" class="app__wrapper">
-      <iframe id="aframe-view" src="about:blank" class="app__iframe"></iframe>
+      <div id="aframe-view" class="app__view">
+        <a-scene>
+          <a-sky color="#6EBAA7"></a-sky>
+        </a-scene>
+      </div>
     </div>
   </div>
 </template>
@@ -12,43 +16,26 @@ import { debounce } from 'lodash'
 
 export default {
   name: 'aframe-view',
-  data () {
-    return {
-      msg: 'aframe view'
-    }
-  },
   computed: mapGetters({
     aframeCode: 'aframeCode'
   }),
   watch: {
     'aframeCode': function () {
-      this.updateIframe()
+      this.updateDiv()
     }
   },
   methods: {
-    // debounce changes to update the iframe
-    updateIframe: debounce(function () {
-      let iframe = document.getElementById('aframe-view')
-      let parent = iframe.parentNode
-      parent.removeChild(iframe)
-      let newIframe = document.createElement('iframe')
-      newIframe.id = 'aframe-view'
-      newIframe.className = 'app__iframe'
-      parent.append(newIframe)
-      iframe = document.getElementById('aframe-view')
-
-      const iframeDoc = iframe.contentWindow.document
-      iframeDoc.open()
-
-      // remove VR button
-      let newCode = this.aframeCode.replace('<a-scene', '<a-scene vr-mode-ui="enabled: false"')
-
-      iframeDoc.write(newCode)
-      iframeDoc.close()
+    // debounce changes to update the div
+    updateDiv: debounce(function () {
+      let wrapper = document.getElementById('aframe-view')
+      let parent = wrapper.parentNode
+      parent.removeChild(wrapper)
+      let newWrapper = document.createElement('div')
+      newWrapper.id = 'aframe-view'
+      newWrapper.className = 'app__view'
+      newWrapper.innerHTML = this.aframeCode
+      parent.append(newWrapper)
     }, 500)
-  },
-  mounted: function () {
-    this.updateIframe()
   }
 }
 </script>

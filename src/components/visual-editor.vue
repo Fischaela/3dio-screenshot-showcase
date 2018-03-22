@@ -43,7 +43,6 @@ import controlELements from '../js/control-elements'
 import ImageUpload from './image-upload'
 import prettifyHtml from '../js/prettify-html'
 import htmlSnippets from '../js/html-code-snippets'
-import io3d from '3dio'
 import html2canvas from 'html2canvas'
 import fileSaver from 'file-saver'
 
@@ -95,6 +94,8 @@ export default {
       if (list) target = el.querySelectorAll(key)
       else target = el.querySelector(key)
 
+      // console.log('Get El', key, this.aframeCode, el, target)
+
       return target
     },
     pushScene: function () {
@@ -114,27 +115,34 @@ export default {
           // we'll get two elements: plan + camera ( including waypoints )
           // add class for later identification
           result[0].classList.add('io3d-scene')
+
           // check for previously added elements
-          const prevScene = this.getEl('[class="io3d-scene"]')
-          const prevCamera = this.getEl('[camera]') || this.getEl('a-camera')
+          const prevScene = this.getEl('.io3d-scene')
+          const prevCamera = this.getEl('a-camera')
+
           // create string with correct indentation
           var newSceneElements = prettifyHtml(result[0].outerHTML, 6)
           var newCameraElements = prettifyHtml(result[1].outerHTML, 6)
-
-          const el = this.getEl('app-3dio') || this.getEl('io3d-app')
-          const oldIdentifier = el.outerHTML
-          const newIdentifier = oldIdentifier.replace('app-3dio', 'io3d-app').replace(/scene-id=".*"/g, `scene-id="${sceneId}"`)
-          let newCode = this.aframeCode.replace(oldIdentifier, newIdentifier)
+          var newCode // eslint-disable-line no-unused-vars
 
           // replace existing scene elements
-          if (prevScene) newCode = newCode.replace(prevScene.outerHTML, newSceneElements)
           // add new scene elements right before closing a-scene
-          else newCode = newCode.replace('</a-scene>', '  ' + newSceneElements + '\n    </a-scene>')
+          if (prevScene) {
+            newCode = this.aframeCode.replace(prevScene.outerHTML, newSceneElements)
+          } else {
+            newCode = this.aframeCode.replace('</a-scene>', '  ' + newSceneElements + '\n    </a-scene>')
+          }
 
           // replace existing camera elements
-          if (prevCamera) newCode = newCode.replace(prevCamera.outerHTML, newCameraElements)
           // add new scene elements right before closing a-scene
-          else newCode = newCode.replace('</a-scene>', '  ' + newCameraElements + '\n    </a-scene>')
+          if (prevCamera) {
+            newCode = newCode.replace(prevCamera.outerHTML, newCameraElements)
+          } else {
+            newCode = newCode.replace('</a-scene>', '  ' + newCameraElements + '\n    </a-scene>')
+          }
+
+          // remove VR button
+          newCode = newCode.replace('<a-scene', '<a-scene vr-mode-ui="enabled: false"')
 
           this.$store.commit('UPDATE_CODE', newCode)
           this.updateWaypoints()
@@ -174,13 +182,9 @@ export default {
       // legacy support
       const el = this.getEl('app-3dio') || this.getEl('io3d-app')
       if (!el) return
-      const shortId = el.id
       const sceneId = el.getAttribute('scene-id')
-      if (this.$route.params.shortCode !== shortId) {
-        console.warn(`app id ${shortId} does not match route ${this.$route.params.shortCode}`)
-        // TODO: updated shortId in code
-      }
       this.elements.scene.ctrl['scn-inpt'].val = sceneId
+      console.log('Getting App', el)
     },
     getSky: function () {
       const el = this.getEl('a-sky')

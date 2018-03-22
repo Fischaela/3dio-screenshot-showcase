@@ -21,10 +21,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      aframeCode: 'aframeCode',
-      shortId: 'shortId',
-      appTitle: 'appTitle',
-      isTemplate: 'isTemplate',
       screenshotDimensions: 'screenshotDimensions'
     }),
     lastColumn: function () {

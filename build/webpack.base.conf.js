@@ -22,6 +22,8 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
+      'aframe': 'aframe/build/aframe.js',
+      'io3d': '3dio/build/3dio.js',
       '@': resolve('src')
     }
   },
