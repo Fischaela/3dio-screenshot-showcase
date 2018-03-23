@@ -41,7 +41,7 @@ import vueSlider from 'vue-slider-component'
 import { debounce } from 'lodash'
 import controlELements from '../js/control-elements'
 import ImageUpload from './image-upload'
-import prettifyHtml from '../js/prettify-html'
+// import prettifyHtml from '../js/prettify-html'
 import htmlSnippets from '../js/html-code-snippets'
 import html2canvas from 'html2canvas'
 import fileSaver from 'file-saver'
@@ -61,6 +61,7 @@ export default {
   },
   watch: {
     'aframeCode': function (c) {
+      console.log('AframeCode1', this.aframeCode, typeof this.aframeCode)
       // prevent initial loading if code is empty
       if (!c || c.trim() === '') return
       this.getSky()
@@ -110,49 +111,12 @@ export default {
       // scene id to for testing:
       // 5dc58829-ecd3-4b33-bdaf-f798b7edecd4
       const sceneId = checkUuid.exec(sceneInput)[0]
-      io3d.scene.getAframeElements(sceneId)
-        .then(result => {
-          // we'll get two elements: plan + camera ( including waypoints )
-          // add class for later identification
-          result[0].classList.add('io3d-scene')
-
-          // check for previously added elements
-          const prevScene = this.getEl('.io3d-scene')
-          const prevCamera = this.getEl('a-camera')
-
-          // create string with correct indentation
-          var newSceneElements = prettifyHtml(result[0].outerHTML, 6)
-          var newCameraElements = prettifyHtml(result[1].outerHTML, 6)
-          var newCode // eslint-disable-line no-unused-vars
-
-          // replace existing scene elements
-          // add new scene elements right before closing a-scene
-          if (prevScene) {
-            newCode = this.aframeCode.replace(prevScene.outerHTML, newSceneElements)
-          } else {
-            newCode = this.aframeCode.replace('</a-scene>', '  ' + newSceneElements + '\n    </a-scene>')
-          }
-
-          // replace existing camera elements
-          // add new scene elements right before closing a-scene
-          if (prevCamera) {
-            newCode = newCode.replace(prevCamera.outerHTML, newCameraElements)
-          } else {
-            newCode = newCode.replace('</a-scene>', '  ' + newCameraElements + '\n    </a-scene>')
-          }
-
-          // remove VR button
-          newCode = newCode.replace('<a-scene', '<a-scene vr-mode-ui="enabled: false"')
-
-          this.$store.commit('UPDATE_CODE', newCode)
-          this.updateWaypoints()
-        })
+      this.$store.commit('UPDATE_CODE', sceneId)
     },
     updateWaypoints: function () {
       const waypoints = this.getEl('[tour-waypoint]', true)
       const waypointParent = this.getEl('.waypoints')
       const existingWaypoints = this.getEl('.btn-waypoint', true)
-      const hasAnimationLib = /https:\/\/unpkg\.com\/aframe-animation-component\/dist\/aframe-animation-component\.min\.js/.test(this.aframeCode)
 
       let newWaypoints = ''
       let newCode = this.aframeCode
@@ -168,13 +132,7 @@ export default {
         newWaypoints += '\n' + ' '.repeat(8) + '<button class="btn-waypoint" onclick="document.querySelector(\'[camera]\').components[\'tour\'].goTo(this.dataset.waypointId)" data-waypoint-id="' + waypointId + '">' + name + '</button>'
       })
       if (waypointParent) {
-        // blurb
         newCode = newCode.replace('<div class="waypoints">', '<div class="waypoints">' + newWaypoints)
-        if (!hasAnimationLib) {
-          /* eslint-disable no-useless-escape */
-          var animLib = '    <script src="https://unpkg.com/aframe-animation-component/dist/aframe-animation-component.min.js">\<\/script>\n  </head>'
-          newCode = newCode.replace('  </head>', animLib)
-        }
         this.$store.commit('UPDATE_CODE', newCode)
       }
     },
@@ -184,7 +142,6 @@ export default {
       if (!el) return
       const sceneId = el.getAttribute('scene-id')
       this.elements.scene.ctrl['scn-inpt'].val = sceneId
-      console.log('Getting App', el)
     },
     getSky: function () {
       const el = this.getEl('a-sky')
@@ -448,4 +405,86 @@ export default {
       }
     }
   }
+  .camera-controls {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 100;
+}
+.btn-waypoint, .btn-toggle-play {
+  background-color: rgba(255,255,255,0.9);
+  box-sizing: border-box;
+  display: block;
+  border-radius: 3px;
+  font-size: 14px;
+  color: #333;
+  height: 30px;
+  box-shadow: 1px 1px 2px rgba(0,0,0,.1);
+  transition: all ease 0.3s;
+  cursor: pointer;
+  margin: 0 5px 5px 0;
+  padding: 0 10px;
+  text-decoration: none;
+  border: none;
+  outline: none;
+}
+.btn-waypoint:hover, .btn-toggle-play:hover {
+  background-color: rgba(255,255,255,1);
+  box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+}
+
+.btn-toggle-play {
+  display: none;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  width: 35px;
+  height: 35px;
+  background-image: url('https://spaces-static.archilogic.com/build/170920-121718-65fe40d/e3d/ui/ui-play-black.svg');
+}
+
+/* display play button only if there are waypoints */
+.btn-waypoint + .btn-toggle-play {
+  display: block;
+}
+
+.btn-toggle-play.playing {
+  background-image: url('https://spaces-static.archilogic.com/build/170920-121718-65fe40d/e3d/ui/ui-pause-black.svg');
+}
+
+.camera-mode > .btn {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  margin: 5px 5px 0 0;
+  box-shadow: 1px 1px 2px rgba(0,0,0,.1);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 30px 30px;
+  transition: all ease 0.3s;
+}
+.camera-mode > .btn.camera {
+  background-image: url('https://spaces-static.archilogic.com/build/170920-121718-65fe40d/e3d/ui/icon-camera-black.svg');
+}
+.camera-mode > .btn.bird {
+  background-image: url('https://spaces-static.archilogic.com/build/170711-151653-c61293f/e3d/ui/icon-birdview-black.svg');
+}
+.camera-mode > .btn.person {
+  background-image: url('https://spaces-static.archilogic.com/build/170711-151653-c61293f/e3d/ui/icon-person-black.svg');
+}
+.camera-mode > .btn.camera.active {
+  background-image: url('https://spaces-static.archilogic.com/build/170920-121718-65fe40d/e3d/ui/icon-camera-blue.svg');
+}
+.camera-mode > .btn.bird.active {
+  background-image: url('https://spaces-static.archilogic.com/build/170711-151653-c61293f/e3d/ui/icon-birdview-blue.svg');
+}
+.camera-mode > .btn.person.active {
+  background-image: url('https://spaces-static.archilogic.com/build/170711-151653-c61293f/e3d/ui/icon-person-blue.svg');
+}
+.camera-mode > .btn:hover {
+  box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+}
 </style>

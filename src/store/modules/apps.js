@@ -22,6 +22,7 @@ const actions = {
 // mutations
 const mutations = {
   [types.LOADING_APP] (state, data) {
+    console.log('Loading App', state, data)
     state.isLoadingApp = data
   }
 }
