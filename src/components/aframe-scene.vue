@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <a-scene><a-sky color="#6EBAA7"></a-sky></a-scene>
+  <div class="scene-container">
+    <a-scene embedded><a-sky color="#6EBAA7"></a-sky></a-scene>
     <div v-if="cameraControlsVisible" class="camera-controls">
       <div id="waypoints" class="waypoints">
         <button v-for="waypoint in waypoints" class="btn-waypoint" v-on:click="handleWaypointClick(waypoint.id)" v-text="waypoint.name"></button>
@@ -63,22 +63,23 @@ export default {
           // create string with correct indentation
           // var newSceneElements = prettifyHtml(result[0].outerHTML, 6)
           // var newCameraElements = prettifyHtml(result[1].outerHTML, 6)
-          console.log('Result', result[0], typeof result)
+          console.log('Result', result[1], typeof result)
           console.log('PrevScene', prevScene, 'PrevCamera', prevCamera)
           console.log('AframeCode3', this.aframeCode, typeof this.aframeCode)
 
           console.log('ThisEl', this.$el)
 
           // replace existing scene elements
-          // add new scene elements right before closing a-scene
+          if (prevScene) {
+            prevScene.parentNode.removeChild(prevScene)
+          }
           this.$el.querySelector('a-scene').appendChild(result[0])
 
           // replace existing camera elements
-          // add new scene elements right before closing a-scene
+          if (prevCamera) {
+            prevCamera.parentNode.removeChild(prevCamera)
+          }
           this.$el.querySelector('a-scene').appendChild(result[1])
-
-          // remove VR button
-          this.$el.querySelector('a-scene').setAttribute('vr-mode-uiabled', false)
 
           this.updateWaypoints()
         })
@@ -105,4 +106,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
   @import '../styles/config.less';
+  a-scene,
+  .scene-container {
+    width: 100%;
+    height: 100%;
+  }
+  .a-enter-vr.embedded {
+    display: none;
+  }
 </style>
