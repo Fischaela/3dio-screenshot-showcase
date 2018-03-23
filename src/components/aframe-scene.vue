@@ -1,19 +1,36 @@
 <template>
   <div>
     <a-scene><a-sky color="#6EBAA7"></a-sky></a-scene>
-    <div v-html="cameraControls"></div>
+    <div v-if="cameraControlsVisible" class="camera-controls">
+      <div id="waypoints" class="waypoints">
+        <button v-for="waypoint in waypoints" class="btn-waypoint" v-on:click="handleWaypointClick(waypoint.id)" v-text="waypoint.name"></button>
+      </div>
+      <div class="camera-mode">
+        <div class="btn camera active"
+             onclick="document.querySelector('.waypoints').classList.toggle('hide'), this.classList.toggle('active')">
+        </div>
+        <div class="btn bird"
+             id="btn-bird"
+             onclick="document.querySelector('[camera]').components['tour'].updateViewPoint({position:{y:7}, rotation:{x:-60}}), document.querySelector('#btn-person').classList.remove('active'), this.classList.add('active')">
+        </div>
+        <div class="btn person active"
+             id="btn-person"
+             onclick="document.querySelector('[camera]').components['tour'].updateViewPoint({position:{y:1.6}, rotation:{x:0}}), document.querySelector('#btn-bird').classList.remove('active'), this.classList.add('active')">
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import htmlSnippets from '../js/html-code-snippets'
 
 export default {
   name: 'aframe-scene',
   data () {
     return {
-      cameraControls: null
+      cameraControlsVisible: false,
+      waypoints: []
     }
   },
   watch: {
@@ -32,6 +49,9 @@ export default {
       const sceneId = this.aframeCode
       io3d.scene.getAframeElements(sceneId)
         .then(result => {
+          // Add Camera Controls
+          this.cameraControlsVisible = true
+
           // we'll get two elements: plan + camera ( including waypoints )
           // add class for later identification
           result[0].classList.add('io3d-scene')
@@ -60,11 +80,23 @@ export default {
           // remove VR button
           this.$el.querySelector('a-scene').setAttribute('vr-mode-uiabled', false)
 
-          // Add Camera Controls
-          this.cameraControls = htmlSnippets.cameraControls
-
-          // this.updateWaypoints()
+          this.updateWaypoints()
         })
+    },
+    updateWaypoints: function () {
+      let waypoints = this.$el.querySelectorAll('[tour-waypoint]')
+
+      waypoints.forEach(el => {
+        console.log(el.getAttribute('tour-waypoint'))
+        let newWaypoint = {
+          name: el.getAttribute('tour-waypoint'),
+          id: el.getAttribute('io3d-uuid')
+        }
+        this.waypoints.push(newWaypoint)
+      })
+    },
+    handleWaypointClick: function (id) {
+      return document.querySelector('[camera]').components['tour'].goTo(id)
     }
   }
 }

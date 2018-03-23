@@ -1,7 +1,7 @@
 module.exports = {
   cameraControls:
 `    <div class="camera-controls">
-      <div class="waypoints">
+      <div id="waypoints" class="waypoints">
         <button class="btn-waypoint" onclick="document.querySelector('[camera]').components['tour'].goTo('Overview')">Overview</button>
       </div>
       <div class="camera-mode">

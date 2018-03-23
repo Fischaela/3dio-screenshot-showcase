@@ -113,29 +113,6 @@ export default {
       const sceneId = checkUuid.exec(sceneInput)[0]
       this.$store.commit('UPDATE_CODE', sceneId)
     },
-    updateWaypoints: function () {
-      const waypoints = this.getEl('[tour-waypoint]', true)
-      const waypointParent = this.getEl('.waypoints')
-      const existingWaypoints = this.getEl('.btn-waypoint', true)
-
-      let newWaypoints = ''
-      let newCode = this.aframeCode
-      existingWaypoints.forEach(el => {
-        let str = el.outerHTML
-        newCode = newCode.replace(str, '')
-      })
-      // replace multiple empty lines
-      newCode = newCode.replace(/^\s*\n/gm, '\n')
-      waypoints.forEach(el => {
-        let name = el.getAttribute('tour-waypoint')
-        let waypointId = el.getAttribute('io3d-uuid')
-        newWaypoints += '\n' + ' '.repeat(8) + '<button class="btn-waypoint" onclick="document.querySelector(\'[camera]\').components[\'tour\'].goTo(this.dataset.waypointId)" data-waypoint-id="' + waypointId + '">' + name + '</button>'
-      })
-      if (waypointParent) {
-        newCode = newCode.replace('<div class="waypoints">', '<div class="waypoints">' + newWaypoints)
-        this.$store.commit('UPDATE_CODE', newCode)
-      }
-    },
     getApp: function () {
       // legacy support
       const el = this.getEl('app-3dio') || this.getEl('io3d-app')
