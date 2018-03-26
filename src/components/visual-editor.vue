@@ -56,16 +56,6 @@ export default {
     'image-upload': ImageUpload,
     'vue-slider': vueSlider
   },
-  watch: {
-    'aframeCode': function (c) {
-      console.log('AframeCode1', this.aframeCode, typeof this.aframeCode)
-      // prevent initial loading if code is empty
-      if (!c || c.trim() === '') return
-      this.getSky()
-      this.getLogo()
-      this.getApp()
-    }
-  },
   computed: {
     ...mapGetters({
       aframeCode: 'aframeCode',
@@ -111,33 +101,6 @@ export default {
       const sceneId = checkUuid.exec(sceneInput)[0]
       this.$store.commit('UPDATE_CODE', sceneId)
     },
-    getApp: function () {
-      // legacy support
-      const el = this.getEl('app-3dio') || this.getEl('io3d-app')
-      if (!el) return
-      const sceneId = el.getAttribute('scene-id')
-      this.elements.scene.ctrl['scn-inpt'].val = sceneId
-    },
-    getSky: function () {
-      const el = this.getEl('a-sky')
-      if (!el) return
-      const skyColor = el.getAttribute('color')
-      const skySrc = el.getAttribute('src')
-      const rotation = el.getAttribute('rotation')
-      if (skyColor) {
-        this.elements.sky.ctrl['bkgrnd-clr'].val = {
-          hex: skyColor
-        }
-        this.elements.sky.ctrl['bkgrnd-ckbx-img'].val = false
-        this.elements.sky.ctrl['bkgrnd-ckbx-clr'].val = true
-      } else if (skySrc) {
-        this.elements.sky.ctrl['bkgrnd-inpt'].val = skySrc
-        this.elements.sky.ctrl['bkgrnd-ckbx-img'].val = true
-        this.elements.sky.ctrl['bkgrnd-ckbx-clr'].val = false
-        // rotation is a string - that's why we need to parse it
-        this.elements.sky.ctrl['bkgrnd-rot'].val = rotation ? rotation.split(' ')[1] : 0
-      }
-    },
     pushColor: function () {
       this.elements.sky.ctrl['bkgrnd-ckbx-img'].val = false
       const newColor = this.elements.sky.ctrl['bkgrnd-clr'].val.hex
@@ -151,13 +114,6 @@ export default {
         src: newImg,
         rotation: rot
       })
-    },
-    getLogo: function () {
-      const imgEl = this.getEl('#custom-logo img')
-      const linkEl = this.getEl('#custom-logo a')
-      if (!imgEl) return
-      this.elements.logo.ctrl['lg-inpt'].val = imgEl.src
-      if (linkEl) this.elements.logo.ctrl['lg-link'].val = /href="\S*"/.test(linkEl.outerHTML) ? /href="(\S*)"/.exec(linkEl.outerHTML)[1] : null
     },
     switchLogo: function () {
       const showLogo = this.elements.logo.ctrl['lg-ckbx'].val
