@@ -76,13 +76,13 @@ module.exports = {
         id: 'bkgrnd-color',
         type: 'checkbox',
         method: 'pushColor',
-        val: true
+        val: false
       },
       'bkgrnd-clr': {
         condition: 'elements.sky.ctrl.bkgrnd-ckbx-clr.val',
         type: 'color',
         val: {
-          hex: '#6EBAA7'
+          hex: '#FFFFFF'
         },
         method: 'pushColor'
       },
@@ -91,7 +91,7 @@ module.exports = {
         id: 'bkgrnd-img',
         type: 'checkbox',
         method: 'pushSkyImg',
-        val: false
+        val: true
       },
       'bkgrnd-text': {
         condition: 'elements.sky.ctrl.bkgrnd-ckbx-img.val',
@@ -108,14 +108,14 @@ module.exports = {
         label: 'Rotation',
         type: 'slider',
         range: [0, 360],
-        val: 0,
+        val: 290,
         method: 'pushSkyImg'
       },
       'bkgrnd-inpt': {
         condition: 'elements.sky.ctrl.bkgrnd-ckbx-img.val',
         type: 'input',
         placeholder: 'enter your file key',
-        val: null,
+        val: 'https://storage.3d.io/535e624259ee6b0200000484/2017-08-08_15-19-35_C6qRcB/empire_low.jpg',
         method: 'pushSkyImg'
       }
     }

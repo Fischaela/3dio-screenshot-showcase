@@ -1,7 +1,7 @@
 <template>
   <div class="scene-container">
     <a-scene embedded :style="{width: screenshotWidth + 'px', height: screenshotHeight + 'px'}">
-      <a-sky :color="color"></a-sky>
+      <a-sky :color="color" :src="backgroundImageSrc" :rotation="backgroundImageRotation"></a-sky>
     </a-scene>
     <div v-if="cameraControlsVisible" class="camera-controls">
       <div id="waypoints" class="waypoints">
@@ -45,13 +45,20 @@ export default {
     ...mapGetters({
       aframeCode: 'aframeCode',
       screenshotDimensions: 'screenshotDimensions',
-      color: 'color'
+      color: 'color',
+      backgroundImage: 'backgroundImage'
     }),
     screenshotWidth: function () {
       return this.screenshotDimensions.width
     },
     screenshotHeight: function () {
       return this.screenshotDimensions.height
+    },
+    backgroundImageSrc: function () {
+      return this.backgroundImage.src
+    },
+    backgroundImageRotation: function () {
+      return '0 ' + this.backgroundImage.rotation + ' 0'
     }
   },
   mounted () {

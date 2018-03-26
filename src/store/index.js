@@ -10,7 +10,9 @@ const debug = process.env.NODE_ENV !== 'production'
 const DEFAULT_VALUES = {
   screenshotWidth: 1024,
   screenshotHeight: 768,
-  color: '#6EBAA7'
+  color: '#FFFFFF',
+  imageSrc: 'https://storage.3d.io/535e624259ee6b0200000484/2017-08-08_15-19-35_C6qRcB/empire_low.jpg',
+  imageRot: '290'
 }
 
 // initial state
@@ -22,6 +24,10 @@ const state = {
   screenshotDimensions: {
     width: DEFAULT_VALUES.screenshotWidth,
     height: DEFAULT_VALUES.screenshotHeight
+  },
+  backgroundImage: {
+    src: DEFAULT_VALUES.imageSrc,
+    rotation: DEFAULT_VALUES.imageRot
   }
 }
 
@@ -37,7 +43,8 @@ const getters = {
   sceneToLoad: state => state.sceneToLoad,
   modelStructure: state => state.modelStructure,
   screenshotDimensions: state => state.screenshotDimensions,
-  color: state => state.color
+  color: state => state.color,
+  backgroundImage: state => state.backgroundImage
 }
 
 // mutations
@@ -61,6 +68,10 @@ const mutations = {
   [types.UPDATE_COLOR] (state, data) {
     console.log('Updating Color', state, data)
     state.color = data
+  },
+  [types.UPDATE_IMAGE] (state, data) {
+    console.log('Updating Image', state, data)
+    state.backgroundImage = data
   }
 }
 

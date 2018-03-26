@@ -41,7 +41,6 @@ import vueSlider from 'vue-slider-component'
 import { debounce } from 'lodash'
 import controlELements from '../js/control-elements'
 import ImageUpload from './image-upload'
-// import prettifyHtml from '../js/prettify-html'
 import htmlSnippets from '../js/html-code-snippets'
 
 export default {
@@ -141,18 +140,17 @@ export default {
     },
     pushColor: function () {
       this.elements.sky.ctrl['bkgrnd-ckbx-img'].val = false
-      // const el = this.getEl('a-sky')
       const newColor = this.elements.sky.ctrl['bkgrnd-clr'].val.hex
-      // const newCode = this.aframeCode.replace(el.outerHTML, '<a-sky color="' + newColor + '"></a-sky>')
       this.$store.commit('UPDATE_COLOR', newColor)
     },
     pushSkyImg: function () {
       this.elements.sky.ctrl['bkgrnd-ckbx-clr'].val = false
-      const el = this.getEl('a-sky')
       const newImg = this.elements.sky.ctrl['bkgrnd-inpt'].val
       const rot = this.elements.sky.ctrl['bkgrnd-rot'].val
-      const newCode = this.aframeCode.replace(el.outerHTML, `<a-sky src="${newImg}" rotation="0 ${rot} 0"></a-sky>`)
-      this.$store.commit('UPDATE_CODE', newCode)
+      this.$store.commit('UPDATE_IMAGE', {
+        src: newImg,
+        rotation: rot
+      })
     },
     getLogo: function () {
       const imgEl = this.getEl('#custom-logo img')
