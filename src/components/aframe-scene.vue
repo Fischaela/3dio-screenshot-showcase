@@ -41,8 +41,13 @@ export default {
   },
   computed: {
     ...mapGetters({
-      aframeCode: 'aframeCode'
+      aframeCode: 'aframeCode',
+      screenshotDimensions: 'screenshotDimensions'
     })
+  },
+  mounted () {
+    console.log('Mounted!!')
+    this.$root.$on('takeScreenshot', this.takeScreenshot)
   },
   methods: {
     pushScene: function () {
@@ -63,11 +68,10 @@ export default {
           // create string with correct indentation
           // var newSceneElements = prettifyHtml(result[0].outerHTML, 6)
           // var newCameraElements = prettifyHtml(result[1].outerHTML, 6)
-          console.log('Result', result[1], typeof result)
-          console.log('PrevScene', prevScene, 'PrevCamera', prevCamera)
-          console.log('AframeCode3', this.aframeCode, typeof this.aframeCode)
-
-          console.log('ThisEl', this.$el)
+          // console.log('Result', result[1], typeof result, result[1].position)
+          // console.log('PrevScene', prevScene, 'PrevCamera', prevCamera, prevCamera.position)
+          // console.log('AframeCode3', this.aframeCode, typeof this.aframeCode)
+          // console.log('ThisEl', this.$el)
 
           // replace existing scene elements
           if (prevScene) {
@@ -98,6 +102,14 @@ export default {
     },
     handleWaypointClick: function (id) {
       return document.querySelector('[camera]').components['tour'].goTo(id)
+    },
+    takeScreenshot: function () {
+      let screenshotComponent = document.querySelector('a-scene').components.screenshot
+
+      console.log('Taking Screenshot 1', screenshotComponent.data.width, this.screenshotDimensions)
+      screenshotComponent.data.width = 1024
+      screenshotComponent.data.height = 768
+      screenshotComponent.capture('perspective')
     }
   }
 }

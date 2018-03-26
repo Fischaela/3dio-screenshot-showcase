@@ -43,8 +43,6 @@ import controlELements from '../js/control-elements'
 import ImageUpload from './image-upload'
 // import prettifyHtml from '../js/prettify-html'
 import htmlSnippets from '../js/html-code-snippets'
-import html2canvas from 'html2canvas'
-import fileSaver from 'file-saver'
 
 export default {
   name: 'visual-editor',
@@ -225,14 +223,9 @@ export default {
       }
     },
     takeScreenshot: function () {
-      html2canvas(document.querySelector('#app-container')).then(canvas => {
-        canvas.toBlob(function (blob) {
-          fileSaver.saveAs(blob, 'myScreenshot.png')
-        })
-      })
+      this.$root.$emit('takeScreenshot')
     },
     changeScreenshotDimensions: function () {
-      console.log(this)
       const widthInput = this.elements.screenshot.ctrl['screenshot-width'].val
       const heightInput = this.elements.screenshot.ctrl['screenshot-height'].val
       const dimensions = {

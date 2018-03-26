@@ -7,14 +7,19 @@ Vue.use(Vuex)
 
 const debug = process.env.NODE_ENV !== 'production'
 
+const DEFAULT_VALUES = {
+  screenshotWidth: 1024,
+  screenshotHeight: 768
+}
+
 // initial state
 const state = {
   aframeCode: htmlToElements('<a-scene><a-sky color="#6EBAA7"></a-sky></a-scene>'),
   sceneToLoad: false,
   modelStructure: null,
   screenshotDimensions: {
-    width: null,
-    height: null
+    width: DEFAULT_VALUES.screenshotWidth,
+    height: DEFAULT_VALUES.screenshotHeight
   }
 }
 
