@@ -35,10 +35,10 @@ export default {
       return mode === '' ? 'a' : mode
     },
     screenshotWidth: function () {
-      return this.screenshotDimensions.width || 1024
+      return this.screenshotDimensions.width
     },
     screenshotHeight: function () {
-      return this.screenshotDimensions.height || 768
+      return this.screenshotDimensions.height
     }
   },
   components: {

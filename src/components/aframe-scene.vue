@@ -1,6 +1,8 @@
 <template>
   <div class="scene-container">
-    <a-scene embedded><a-sky color="#6EBAA7"></a-sky></a-scene>
+    <a-scene embedded :style="{width: screenshotWidth + 'px', height: screenshotHeight + 'px'}">
+      <a-sky color="#6EBAA7"></a-sky>
+    </a-scene>
     <div v-if="cameraControlsVisible" class="camera-controls">
       <div id="waypoints" class="waypoints">
         <button v-for="waypoint in waypoints" class="btn-waypoint" v-on:click="handleWaypointClick(waypoint.id)" v-text="waypoint.name"></button>
@@ -43,7 +45,13 @@ export default {
     ...mapGetters({
       aframeCode: 'aframeCode',
       screenshotDimensions: 'screenshotDimensions'
-    })
+    }),
+    screenshotWidth: function () {
+      return this.screenshotDimensions.width || 1024
+    },
+    screenshotHeight: function () {
+      return this.screenshotDimensions.height || 768
+    }
   },
   mounted () {
     console.log('Mounted!!')
@@ -107,8 +115,8 @@ export default {
       let screenshotComponent = document.querySelector('a-scene').components.screenshot
 
       console.log('Taking Screenshot 1', screenshotComponent.data.width, this.screenshotDimensions)
-      screenshotComponent.data.width = 1024
-      screenshotComponent.data.height = 768
+      screenshotComponent.data.width = this.screenshotWidth
+      screenshotComponent.data.height = this.screenshotHeight
       screenshotComponent.capture('perspective')
     }
   }

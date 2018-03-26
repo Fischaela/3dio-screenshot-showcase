@@ -72,7 +72,8 @@ export default {
       aframeCode: 'aframeCode',
       sceneToLoad: 'sceneToLoad',
       modelStructure: 'modelStructure',
-      shortId: 'shortId'
+      shortId: 'shortId',
+      screenshotDimensions: 'screenshotDimensions'
     })
   },
   methods: {
@@ -234,6 +235,10 @@ export default {
       }
 
       this.$store.commit('UPDATE_SCREENSHOT', dimensions)
+      // trigger a-scene resize
+      window.setTimeout(function () {
+        window.dispatchEvent(new Event('resize'))
+      }, 500)
     }
   }
 }
