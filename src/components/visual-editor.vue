@@ -61,7 +61,8 @@ export default {
       sceneToLoad: 'sceneToLoad',
       modelStructure: 'modelStructure',
       shortId: 'shortId',
-      screenshotDimensions: 'screenshotDimensions'
+      screenshotDimensions: 'screenshotDimensions',
+      logo: 'logo'
     })
   },
   methods: {
@@ -115,24 +116,24 @@ export default {
       })
     },
     switchLogo: function () {
-      const showLogo = this.elements.logo.ctrl['lg-ckbx'].val
-      const img = this.getEl('#custom-logo img')
-      if (!showLogo) {
-        if (!img) return
-        const newCode = this.aframeCode.replace(img.src, '')
-        this.$store.commit('UPDATE_CODE', newCode)
-      } else {
-        let newImg = this.elements.logo.ctrl['lg-inpt'].val = 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg'
-        const newCode = this.aframeCode.replace('<img src="">', '<img src="' + newImg + '">')
-        this.$store.commit('UPDATE_CODE', newCode)
+      const newLogoState = {
+        src: this.logo.src,
+        width: this.logo.width,
+        url: this.logo.url,
+        showLogo: !this.logo.showLogo
       }
+      this.$store.commit('UPDATE_LOGO', newLogoState)
     },
     pushLogo: function () {
       const newLogo = this.elements.logo.ctrl['lg-inpt'].val
       const logoSize = this.elements.logo.ctrl['lg-width'].val
+      const newUrl = this.elements.logo.ctrl['lg-link'].val
+
       this.$store.commit('UPDATE_LOGO', {
         src: newLogo,
-        width: logoSize
+        width: logoSize,
+        url: newUrl,
+        showLogo: true
       })
     },
     imageUpload: function (el) {

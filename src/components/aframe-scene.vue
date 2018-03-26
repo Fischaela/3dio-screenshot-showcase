@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div id="custom-logo" class="logo" :style="{width: logo.width + 'px'}">
+    <div v-if="logo.showLogo" id="custom-logo" class="logo" :style="{width: logo.width + 'px'}">
       <a :href="logo.url" target="_blank" class="logo__link">
         <img :src="logo.src" class="logo__img">
       </a>
