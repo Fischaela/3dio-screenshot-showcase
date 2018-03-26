@@ -109,6 +109,7 @@ export default {
         })
     },
     updateWaypoints: function () {
+      this.waypoints = []
       let waypoints = this.$el.querySelectorAll('[tour-waypoint]')
       let firstId = null
 
