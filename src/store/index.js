@@ -9,7 +9,8 @@ const debug = process.env.NODE_ENV !== 'production'
 
 const DEFAULT_VALUES = {
   screenshotWidth: 1024,
-  screenshotHeight: 768
+  screenshotHeight: 768,
+  color: '#6EBAA7'
 }
 
 // initial state
@@ -17,6 +18,7 @@ const state = {
   aframeCode: htmlToElements('<a-scene><a-sky color="#6EBAA7"></a-sky></a-scene>'),
   sceneToLoad: false,
   modelStructure: null,
+  color: DEFAULT_VALUES.color,
   screenshotDimensions: {
     width: DEFAULT_VALUES.screenshotWidth,
     height: DEFAULT_VALUES.screenshotHeight
@@ -34,7 +36,8 @@ const getters = {
   aframeCode: state => state.aframeCode,
   sceneToLoad: state => state.sceneToLoad,
   modelStructure: state => state.modelStructure,
-  screenshotDimensions: state => state.screenshotDimensions
+  screenshotDimensions: state => state.screenshotDimensions,
+  color: state => state.color
 }
 
 // mutations
@@ -54,6 +57,10 @@ const mutations = {
   [types.SET_MODEL_STRUCTURE] (state, data) {
     console.log('Setting Model Structure', state, data)
     state.modelStructure = data
+  },
+  [types.UPDATE_COLOR] (state, data) {
+    console.log('Updating Color', state, data)
+    state.color = data
   }
 }
 

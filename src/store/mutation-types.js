@@ -1,4 +1,5 @@
 export const UPDATE_CODE = 'UPDATE_CODE'
+export const UPDATE_COLOR = 'UPDATE_COLOR'
 export const UPDATE_SCREENSHOT = 'UPDATE_SCREENSHOT'
 export const SET_SCENE = 'SET_SCENE'
 export const SET_SHORT_ID = 'SET_SHORT_ID'

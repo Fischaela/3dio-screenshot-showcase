@@ -141,10 +141,10 @@ export default {
     },
     pushColor: function () {
       this.elements.sky.ctrl['bkgrnd-ckbx-img'].val = false
-      const el = this.getEl('a-sky')
+      // const el = this.getEl('a-sky')
       const newColor = this.elements.sky.ctrl['bkgrnd-clr'].val.hex
-      const newCode = this.aframeCode.replace(el.outerHTML, '<a-sky color="' + newColor + '"></a-sky>')
-      this.$store.commit('UPDATE_CODE', newCode)
+      // const newCode = this.aframeCode.replace(el.outerHTML, '<a-sky color="' + newColor + '"></a-sky>')
+      this.$store.commit('UPDATE_COLOR', newColor)
     },
     pushSkyImg: function () {
       this.elements.sky.ctrl['bkgrnd-ckbx-clr'].val = false

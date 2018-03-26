@@ -82,7 +82,7 @@ module.exports = {
         condition: 'elements.sky.ctrl.bkgrnd-ckbx-clr.val',
         type: 'color',
         val: {
-          hex: '#ffffff'
+          hex: '#6EBAA7'
         },
         method: 'pushColor'
       },
