@@ -12,7 +12,10 @@ const DEFAULT_VALUES = {
   screenshotHeight: 768,
   color: '#FFFFFF',
   imageSrc: 'https://storage.3d.io/535e624259ee6b0200000484/2017-08-08_15-19-35_C6qRcB/empire_low.jpg',
-  imageRot: '290'
+  imageRot: '290',
+  logoSrc: 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg',
+  logoWidth: 80,
+  logoUrl: 'https://3d.io'
 }
 
 // initial state
@@ -28,6 +31,11 @@ const state = {
   backgroundImage: {
     src: DEFAULT_VALUES.imageSrc,
     rotation: DEFAULT_VALUES.imageRot
+  },
+  logo: {
+    src: DEFAULT_VALUES.logoSrc,
+    width: DEFAULT_VALUES.logoWidth,
+    url: DEFAULT_VALUES.logoUrl
   }
 }
 
@@ -44,7 +52,8 @@ const getters = {
   modelStructure: state => state.modelStructure,
   screenshotDimensions: state => state.screenshotDimensions,
   color: state => state.color,
-  backgroundImage: state => state.backgroundImage
+  backgroundImage: state => state.backgroundImage,
+  logo: state => state.logo
 }
 
 // mutations
@@ -72,6 +81,10 @@ const mutations = {
   [types.UPDATE_IMAGE] (state, data) {
     console.log('Updating Image', state, data)
     state.backgroundImage = data
+  },
+  [types.UPDATE_LOGO] (state, data) {
+    console.log('Updating Logo', state, data)
+    state.logo = data
   }
 }
 

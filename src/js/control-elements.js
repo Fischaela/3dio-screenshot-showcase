@@ -28,9 +28,8 @@ module.exports = {
       'lg-inpt': {
         condition: 'elements.logo.ctrl.lg-ckbx.val',
         type: 'input',
-        hide: true,
         placeholder: 'enter a url',
-        val: null,
+        val: 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg',
         method: 'pushLogo'
       },
       'lg-text': {

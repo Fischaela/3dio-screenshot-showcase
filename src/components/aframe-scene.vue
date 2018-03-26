@@ -21,6 +21,11 @@
         </div>
       </div>
     </div>
+    <div id="custom-logo" class="logo" :style="{width: logo.width + 'px'}">
+      <a :href="logo.url" target="_blank" class="logo__link">
+        <img :src="logo.src" class="logo__img">
+      </a>
+    </div>
   </div>
 </template>
 
@@ -37,7 +42,6 @@ export default {
   },
   watch: {
     'aframeCode': function () {
-      console.log('Update!!')
       this.pushScene()
     }
   },
@@ -46,7 +50,8 @@ export default {
       aframeCode: 'aframeCode',
       screenshotDimensions: 'screenshotDimensions',
       color: 'color',
-      backgroundImage: 'backgroundImage'
+      backgroundImage: 'backgroundImage',
+      logo: 'logo'
     }),
     screenshotWidth: function () {
       return this.screenshotDimensions.width
@@ -140,5 +145,10 @@ export default {
   }
   .a-enter-vr.embedded {
     display: none;
+  }
+  .logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
   }
 </style>

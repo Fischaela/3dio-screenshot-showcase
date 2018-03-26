@@ -41,7 +41,6 @@ import vueSlider from 'vue-slider-component'
 import { debounce } from 'lodash'
 import controlELements from '../js/control-elements'
 import ImageUpload from './image-upload'
-import htmlSnippets from '../js/html-code-snippets'
 
 export default {
   name: 'visual-editor',
@@ -131,42 +130,10 @@ export default {
     pushLogo: function () {
       const newLogo = this.elements.logo.ctrl['lg-inpt'].val
       const logoSize = this.elements.logo.ctrl['lg-width'].val
-      const logoEl = this.getEl('#custom-logo')
-      const imgEl = this.getEl('#custom-logo img')
-      const linkEl = this.getEl('#custom-logo a')
-      let newCode = this.aframeCode
-      if (!logoEl || !imgEl || !linkEl) {
-        if (logoEl) {
-          newCode = newCode.replace(logoEl.outerHTML, htmlSnippets.logo)
-          this.$store.commit('UPDATE_CODE', newCode)
-          this.pushLogo()
-          return
-        }
-      }
-      // check if link contains protokoll
-      const myLink = this.elements.logo.ctrl['lg-link'].val
-      if (myLink && myLink !== '') {
-        this.elements.logo.ctrl['lg-link'].val = myLink.trim()
-        if (!/^http.*:\/\//.test(myLink)) this.elements.logo.ctrl['lg-link'].val = 'http://' + this.elements.logo.ctrl['lg-link'].val
-      }
-      let currentLink
-      if (!imgEl) return
-      // extract link from href attribute - doing linkEl.href works unreliably
-      if (linkEl) currentLink = /href="\S*"/.test(linkEl.outerHTML) && /href="\S*"/.exec(linkEl.outerHTML)[0]
-      // adapt logo size
-      newCode = newCode.replace(/<div id="custom-logo".*>/g, `<div id="custom-logo" style="width:${logoSize}px">`)
-      // replace logo src
-      newCode = newCode.replace(imgEl.src, newLogo)
-      // set new url link for log
-      // console.log('push logo', `${currentLink}`, `href="${this.elements.logo.ctrl['lg-link'].val}"`, linkEl.outerHTML)
-      const logoLink = this.elements.logo.ctrl['lg-link'].val
-      if (currentLink) {
-        newCode = newCode.replace(`<a ${currentLink}`, logoLink ? `<a href="${logoLink}"` : '<a')
-      } else {
-        newCode = newCode.replace(linkEl.outerHTML, linkEl.outerHTML.replace('<a', logoLink ? `<a href="${logoLink}"` : '<a'))
-      }
-      // console.log(newCode)
-      this.$store.commit('UPDATE_CODE', newCode)
+      this.$store.commit('UPDATE_LOGO', {
+        src: newLogo,
+        width: logoSize
+      })
     },
     imageUpload: function (el) {
       if (el.target === 'lg-upload') {
