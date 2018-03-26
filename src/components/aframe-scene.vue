@@ -110,15 +110,22 @@ export default {
     },
     updateWaypoints: function () {
       let waypoints = this.$el.querySelectorAll('[tour-waypoint]')
+      let firstId = null
 
-      waypoints.forEach(el => {
+      waypoints.forEach((el, i) => {
         console.log(el.getAttribute('tour-waypoint'))
         let newWaypoint = {
           name: el.getAttribute('tour-waypoint'),
           id: el.getAttribute('io3d-uuid')
         }
         this.waypoints.push(newWaypoint)
+        if (i === 0) {
+          firstId = el.getAttribute('io3d-uuid')
+        }
       })
+      window.setTimeout(() => {
+        this.handleWaypointClick(firstId)
+      }, 500)
     },
     handleWaypointClick: function (id) {
       return document.querySelector('[camera]').components['tour'].goTo(id)
