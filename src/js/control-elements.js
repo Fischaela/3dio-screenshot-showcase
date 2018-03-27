@@ -29,7 +29,7 @@ module.exports = {
         condition: 'elements.logo.ctrl.lg-ckbx.val',
         type: 'input',
         placeholder: 'enter a url',
-        val: 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg',
+        val: 'https://raw.githubusercontent.com/archilogic-com/3dio-js/HEAD/3dio-logo.png',
         method: 'pushLogo'
       },
       'lg-text': {

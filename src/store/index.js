@@ -13,7 +13,7 @@ const DEFAULT_VALUES = {
   color: '#FFFFFF',
   imageSrc: 'https://storage.3d.io/535e624259ee6b0200000484/2017-08-08_15-19-35_C6qRcB/empire_low.jpg',
   imageRot: '290',
-  logoSrc: 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg',
+  logoSrc: 'https://raw.githubusercontent.com/archilogic-com/3dio-js/HEAD/3dio-logo.png',
   logoWidth: 80,
   logoDataURL: null
 }

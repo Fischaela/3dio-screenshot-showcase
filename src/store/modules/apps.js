@@ -31,11 +31,11 @@ const actions = {
     }
     let dataURL = null
     let proxyUrl = 'https://cors-anywhere.herokuapp.com/'
-    let targetUrl = 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg'
+    let targetUrl = 'https://raw.githubusercontent.com/archilogic-com/3dio-js/HEAD/3dio-logo.png'
     toDataUrl(proxyUrl + targetUrl, function (data) {
       dataURL = data
       commit('UPDATE_LOGO', {
-        src: 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg',
+        src: 'https://raw.githubusercontent.com/archilogic-com/3dio-js/HEAD/3dio-logo.png',
         width: 80,
         showLogo: true,
         dataURL: dataURL
