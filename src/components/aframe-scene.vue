@@ -23,6 +23,7 @@
     </div>
     <div v-if="logo.showLogo" id="custom-logo" class="logo" :style="{width: logo.width + 'px'}">
       <img :src="logo.src" class="logo__img">
+      {{logo.image}}
     </div>
   </div>
 </template>
@@ -66,6 +67,7 @@ export default {
   },
   mounted () {
     this.$root.$on('takeScreenshot', this.takeScreenshot)
+    console.log(typeof this.logo.image)
   },
   methods: {
     pushScene: function () {

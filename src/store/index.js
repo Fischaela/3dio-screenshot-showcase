@@ -7,6 +7,10 @@ Vue.use(Vuex)
 
 const debug = process.env.NODE_ENV !== 'production'
 
+let io3dLogoImage = new Image()
+io3dLogoImage.crossOrigin = 'anonymous'
+io3dLogoImage.src = 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg'
+
 const DEFAULT_VALUES = {
   screenshotWidth: 1024,
   screenshotHeight: 768,
@@ -15,7 +19,7 @@ const DEFAULT_VALUES = {
   imageRot: '290',
   logoSrc: 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg',
   logoWidth: 80,
-  logoUrl: 'https://3d.io'
+  logoImage: io3dLogoImage
 }
 
 // initial state
@@ -35,7 +39,8 @@ const state = {
   logo: {
     src: DEFAULT_VALUES.logoSrc,
     width: DEFAULT_VALUES.logoWidth,
-    showLogo: true
+    showLogo: true,
+    image: DEFAULT_VALUES.logoImage
   }
 }
 
