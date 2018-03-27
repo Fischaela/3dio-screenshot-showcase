@@ -34,7 +34,6 @@ const actions = {
     let targetUrl = 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg'
     toDataUrl(proxyUrl + targetUrl, function (data) {
       dataURL = data
-      console.log(dataURL)
       commit('UPDATE_LOGO', {
         src: 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg',
         width: 80,

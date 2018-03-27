@@ -24,18 +24,27 @@
     <div v-if="logo.showLogo" id="custom-logo" class="logo" :style="{width: logo.width + 'px'}">
       <img :src="logo.dataURL" class="logo__img">
     </div>
+    <div id="screenshot-preview" class="screenshot-preview">
+      <div v-if="logo.showLogo" id="custom-logo" class="logo" :style="{width: logo.width + 'px'}">
+        <img :src="logo.dataURL" class="logo__img">
+      </div>
+      <img id="screenshot-img" class="screenshot-img"src="#">
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import html2canvas from 'html2canvas'
+import fileSaver from 'file-saver'
 
 export default {
   name: 'aframe-scene',
   data () {
     return {
       cameraControlsVisible: false,
-      waypoints: []
+      waypoints: [],
+      preview: false
     }
   },
   watch: {
@@ -136,7 +145,19 @@ export default {
       console.log('Taking Screenshot 1', screenshotComponent.data.width, this.screenshotDimensions)
       screenshotComponent.data.width = this.screenshotWidth
       screenshotComponent.data.height = this.screenshotHeight
-      screenshotComponent.capture('perspective')
+      let newCanvas = screenshotComponent.getCanvas('perspective')
+      let canvasImg = newCanvas.toDataURL('image/png')
+
+      let container = document.getElementById('screenshot-preview')
+      let containerImg = document.getElementById('screenshot-img')
+      containerImg.src = canvasImg
+      console.log('CONTAINER', container)
+
+      html2canvas(container).then(canvas => {
+        canvas.toBlob(function (blob) {
+          fileSaver.saveAs(blob, 'myScreenshot.png')
+        })
+      })
     }
   }
 }
@@ -158,5 +179,13 @@ export default {
     position: absolute;
     top: 20px;
     left: 20px;
+  }
+  .screenshot-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(244, 231, 15, 0.5);
   }
 </style>

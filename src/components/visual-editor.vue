@@ -127,10 +127,30 @@ export default {
       const newLogo = this.elements.logo.ctrl['lg-inpt'].val
       const logoSize = this.elements.logo.ctrl['lg-width'].val
 
-      this.$store.commit('UPDATE_LOGO', {
-        src: newLogo,
-        width: logoSize,
-        showLogo: true
+      function toDataUrl (url, callback) {
+        let xhr = new XMLHttpRequest()
+        xhr.onload = function () {
+          let reader = new FileReader()
+          reader.onloadend = function () {
+            callback(reader.result)
+          }
+          reader.readAsDataURL(xhr.response)
+        }
+        xhr.open('GET', url)
+        xhr.responseType = 'blob'
+        xhr.send()
+      }
+      let dataURL = null
+      let proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+      let targetUrl = newLogo
+      toDataUrl(proxyUrl + targetUrl, (data) => {
+        dataURL = data
+        this.$store.commit('UPDATE_LOGO', {
+          src: newLogo,
+          width: logoSize,
+          showLogo: true,
+          dataURL: dataURL
+        })
       })
     },
     imageUpload: function (el) {
