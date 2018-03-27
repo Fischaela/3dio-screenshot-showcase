@@ -56,6 +56,13 @@ module.exports = {
         range: [50, 250],
         val: 80,
         method: 'pushLogo'
+      },
+      'lg-align': {
+        condition: 'elements.logo.ctrl.lg-ckbx.val',
+        label: 'Align right',
+        type: 'checkbox',
+        val: false,
+        method: 'alignLogo'
       }
     }
   },

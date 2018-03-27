@@ -115,11 +115,24 @@ export default {
         rotation: rot
       })
     },
+    alignLogo: function () {
+      const newAlignState = this.elements.logo.ctrl['lg-align'].val
+      const newLogoState = {
+        src: this.logo.src,
+        width: this.logo.width,
+        showLogo: this.logo.showLogo,
+        alignRight: newAlignState,
+        dataURL: this.logo.dataURL
+      }
+      this.$store.commit('UPDATE_LOGO', newLogoState)
+    },
     switchLogo: function () {
       const newLogoState = {
         src: this.logo.src,
         width: this.logo.width,
-        showLogo: !this.logo.showLogo
+        showLogo: !this.logo.showLogo,
+        alignRight: this.logo.alignRight,
+        dataURL: this.logo.dataURL
       }
       this.$store.commit('UPDATE_LOGO', newLogoState)
     },

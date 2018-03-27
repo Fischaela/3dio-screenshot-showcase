@@ -21,12 +21,12 @@
         </div>
       </div>
     </div>
-    <div v-if="logo.showLogo" id="custom-logo" class="logo" :style="{width: logo.width + 'px'}">
+    <div v-if="logo.showLogo" id="custom-logo" class="logo" :style="{width: logo.width + 'px'}" :class="{'logo--align-right': logo.alignRight}">
       <img :src="logo.dataURL" class="logo__img">
     </div>
     <div id="screenshot-preview" class="screenshot-preview">
       <div v-if="logo.showLogo" id="custom-logo" class="logo" :style="{width: logo.width + 'px'}">
-        <img :src="logo.dataURL" class="logo__img">
+        <img :src="logo.dataURL" class="logo__img" :class="{'logo--align-right': logo.alignRight}">
       </div>
       <img id="screenshot-img" class="screenshot-img"src="#">
     </div>
@@ -179,6 +179,11 @@ export default {
     position: absolute;
     top: 20px;
     left: 20px;
+    right: auto;
+  }
+  .logo--align-right {
+    left: auto;
+    right: 20px;
   }
   .logo__img {
     max-width: 100%;
