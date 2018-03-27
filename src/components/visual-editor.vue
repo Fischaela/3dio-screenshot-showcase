@@ -119,7 +119,6 @@ export default {
       const newLogoState = {
         src: this.logo.src,
         width: this.logo.width,
-        url: this.logo.url,
         showLogo: !this.logo.showLogo
       }
       this.$store.commit('UPDATE_LOGO', newLogoState)
@@ -127,12 +126,10 @@ export default {
     pushLogo: function () {
       const newLogo = this.elements.logo.ctrl['lg-inpt'].val
       const logoSize = this.elements.logo.ctrl['lg-width'].val
-      const newUrl = this.elements.logo.ctrl['lg-link'].val
 
       this.$store.commit('UPDATE_LOGO', {
         src: newLogo,
         width: logoSize,
-        url: newUrl,
         showLogo: true
       })
     },

@@ -56,13 +56,6 @@ module.exports = {
         range: [50, 250],
         val: 80,
         method: 'pushLogo'
-      },
-      'lg-link': {
-        condition: 'elements.logo.ctrl.lg-ckbx.val',
-        type: 'input',
-        placeholder: 'enter a target link',
-        val: null,
-        method: 'pushLogo'
       }
     }
   },

@@ -27,6 +27,7 @@ export default {
       height: 100%;
       overflow: hidden;
       width: 100%;
+      max-width: 100%;
       position: relative;
       &.embed {
         height: 100vh;
