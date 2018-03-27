@@ -22,8 +22,7 @@
       </div>
     </div>
     <div v-if="logo.showLogo" id="custom-logo" class="logo" :style="{width: logo.width + 'px'}">
-      <img :src="logo.src" class="logo__img">
-      {{logo.image}}
+      <img :src="logo.dataURL" class="logo__img">
     </div>
   </div>
 </template>
