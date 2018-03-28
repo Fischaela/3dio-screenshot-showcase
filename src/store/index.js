@@ -36,7 +36,8 @@ const state = {
     src: DEFAULT_VALUES.logoSrc,
     width: DEFAULT_VALUES.logoWidth,
     showLogo: true,
-    dataURL: DEFAULT_VALUES.logoDataURL
+    dataURL: DEFAULT_VALUES.logoDataURL,
+    alignRight: false
   }
 }
 

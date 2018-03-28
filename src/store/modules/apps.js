@@ -38,7 +38,8 @@ const actions = {
         src: 'https://raw.githubusercontent.com/archilogic-com/3dio-js/HEAD/3dio-logo.png',
         width: 80,
         showLogo: true,
-        dataURL: dataURL
+        dataURL: dataURL,
+        alignRight: false
       })
       commit('LOADING_APP', false)
     })
