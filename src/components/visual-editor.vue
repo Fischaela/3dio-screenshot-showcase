@@ -41,11 +41,6 @@ import vueSlider from 'vue-slider-component'
 import { debounce } from 'lodash'
 import controlELements from '../js/control-elements'
 import ImageUpload from './image-upload'
-import prettifyHtml from '../js/prettify-html'
-import htmlSnippets from '../js/html-code-snippets'
-import io3d from '3dio'
-import html2canvas from 'html2canvas'
-import fileSaver from 'file-saver'
 
 export default {
   name: 'visual-editor',
@@ -60,21 +55,14 @@ export default {
     'image-upload': ImageUpload,
     'vue-slider': vueSlider
   },
-  watch: {
-    'aframeCode': function (c) {
-      // prevent initial loading if code is empty
-      if (!c || c.trim() === '') return
-      this.getSky()
-      this.getLogo()
-      this.getApp()
-    }
-  },
   computed: {
     ...mapGetters({
       aframeCode: 'aframeCode',
       sceneToLoad: 'sceneToLoad',
       modelStructure: 'modelStructure',
-      shortId: 'shortId'
+      shortId: 'shortId',
+      screenshotDimensions: 'screenshotDimensions',
+      logo: 'logo'
     })
   },
   methods: {
@@ -95,6 +83,8 @@ export default {
       if (list) target = el.querySelectorAll(key)
       else target = el.querySelector(key)
 
+      // console.log('Get El', key, this.aframeCode, el, target)
+
       return target
     },
     pushScene: function () {
@@ -109,173 +99,72 @@ export default {
       // scene id to for testing:
       // 5dc58829-ecd3-4b33-bdaf-f798b7edecd4
       const sceneId = checkUuid.exec(sceneInput)[0]
-      io3d.scene.getAframeElements(sceneId)
-        .then(result => {
-          // we'll get two elements: plan + camera ( including waypoints )
-          // add class for later identification
-          result[0].classList.add('io3d-scene')
-          // check for previously added elements
-          const prevScene = this.getEl('[class="io3d-scene"]')
-          const prevCamera = this.getEl('[camera]') || this.getEl('a-camera')
-          // create string with correct indentation
-          var newSceneElements = prettifyHtml(result[0].outerHTML, 6)
-          var newCameraElements = prettifyHtml(result[1].outerHTML, 6)
-
-          const el = this.getEl('app-3dio') || this.getEl('io3d-app')
-          const oldIdentifier = el.outerHTML
-          const newIdentifier = oldIdentifier.replace('app-3dio', 'io3d-app').replace(/scene-id=".*"/g, `scene-id="${sceneId}"`)
-          let newCode = this.aframeCode.replace(oldIdentifier, newIdentifier)
-
-          // replace existing scene elements
-          if (prevScene) newCode = newCode.replace(prevScene.outerHTML, newSceneElements)
-          // add new scene elements right before closing a-scene
-          else newCode = newCode.replace('</a-scene>', '  ' + newSceneElements + '\n    </a-scene>')
-
-          // replace existing camera elements
-          if (prevCamera) newCode = newCode.replace(prevCamera.outerHTML, newCameraElements)
-          // add new scene elements right before closing a-scene
-          else newCode = newCode.replace('</a-scene>', '  ' + newCameraElements + '\n    </a-scene>')
-
-          this.$store.commit('UPDATE_CODE', newCode)
-          this.updateWaypoints()
-        })
-    },
-    updateWaypoints: function () {
-      const waypoints = this.getEl('[tour-waypoint]', true)
-      const waypointParent = this.getEl('.waypoints')
-      const existingWaypoints = this.getEl('.btn-waypoint', true)
-      const hasAnimationLib = /https:\/\/unpkg\.com\/aframe-animation-component\/dist\/aframe-animation-component\.min\.js/.test(this.aframeCode)
-
-      let newWaypoints = ''
-      let newCode = this.aframeCode
-      existingWaypoints.forEach(el => {
-        let str = el.outerHTML
-        newCode = newCode.replace(str, '')
-      })
-      // replace multiple empty lines
-      newCode = newCode.replace(/^\s*\n/gm, '\n')
-      waypoints.forEach(el => {
-        let name = el.getAttribute('tour-waypoint')
-        let waypointId = el.getAttribute('io3d-uuid')
-        newWaypoints += '\n' + ' '.repeat(8) + '<button class="btn-waypoint" onclick="document.querySelector(\'[camera]\').components[\'tour\'].goTo(this.dataset.waypointId)" data-waypoint-id="' + waypointId + '">' + name + '</button>'
-      })
-      if (waypointParent) {
-        // blurb
-        newCode = newCode.replace('<div class="waypoints">', '<div class="waypoints">' + newWaypoints)
-        if (!hasAnimationLib) {
-          /* eslint-disable no-useless-escape */
-          var animLib = '    <script src="https://unpkg.com/aframe-animation-component/dist/aframe-animation-component.min.js">\<\/script>\n  </head>'
-          newCode = newCode.replace('  </head>', animLib)
-        }
-        this.$store.commit('UPDATE_CODE', newCode)
-      }
-    },
-    getApp: function () {
-      // legacy support
-      const el = this.getEl('app-3dio') || this.getEl('io3d-app')
-      if (!el) return
-      const shortId = el.id
-      const sceneId = el.getAttribute('scene-id')
-      if (this.$route.params.shortCode !== shortId) {
-        console.warn(`app id ${shortId} does not match route ${this.$route.params.shortCode}`)
-        // TODO: updated shortId in code
-      }
-      this.elements.scene.ctrl['scn-inpt'].val = sceneId
-    },
-    getSky: function () {
-      const el = this.getEl('a-sky')
-      if (!el) return
-      const skyColor = el.getAttribute('color')
-      const skySrc = el.getAttribute('src')
-      const rotation = el.getAttribute('rotation')
-      if (skyColor) {
-        this.elements.sky.ctrl['bkgrnd-clr'].val = {
-          hex: skyColor
-        }
-        this.elements.sky.ctrl['bkgrnd-ckbx-img'].val = false
-        this.elements.sky.ctrl['bkgrnd-ckbx-clr'].val = true
-      } else if (skySrc) {
-        this.elements.sky.ctrl['bkgrnd-inpt'].val = skySrc
-        this.elements.sky.ctrl['bkgrnd-ckbx-img'].val = true
-        this.elements.sky.ctrl['bkgrnd-ckbx-clr'].val = false
-        // rotation is a string - that's why we need to parse it
-        this.elements.sky.ctrl['bkgrnd-rot'].val = rotation ? rotation.split(' ')[1] : 0
-      }
+      this.$store.commit('UPDATE_CODE', sceneId)
     },
     pushColor: function () {
       this.elements.sky.ctrl['bkgrnd-ckbx-img'].val = false
-      const el = this.getEl('a-sky')
       const newColor = this.elements.sky.ctrl['bkgrnd-clr'].val.hex
-      const newCode = this.aframeCode.replace(el.outerHTML, '<a-sky color="' + newColor + '"></a-sky>')
-      this.$store.commit('UPDATE_CODE', newCode)
+      this.$store.commit('UPDATE_COLOR', newColor)
     },
     pushSkyImg: function () {
       this.elements.sky.ctrl['bkgrnd-ckbx-clr'].val = false
-      const el = this.getEl('a-sky')
       const newImg = this.elements.sky.ctrl['bkgrnd-inpt'].val
       const rot = this.elements.sky.ctrl['bkgrnd-rot'].val
-      const newCode = this.aframeCode.replace(el.outerHTML, `<a-sky src="${newImg}" rotation="0 ${rot} 0"></a-sky>`)
-      this.$store.commit('UPDATE_CODE', newCode)
+      this.$store.commit('UPDATE_IMAGE', {
+        src: newImg,
+        rotation: rot
+      })
     },
-    getLogo: function () {
-      const imgEl = this.getEl('#custom-logo img')
-      const linkEl = this.getEl('#custom-logo a')
-      if (!imgEl) return
-      this.elements.logo.ctrl['lg-inpt'].val = imgEl.src
-      if (linkEl) this.elements.logo.ctrl['lg-link'].val = /href="\S*"/.test(linkEl.outerHTML) ? /href="(\S*)"/.exec(linkEl.outerHTML)[1] : null
+    alignLogo: function () {
+      const newAlignState = this.elements.logo.ctrl['lg-align'].val
+      const newLogoState = {
+        src: this.logo.src,
+        width: this.logo.width,
+        showLogo: this.logo.showLogo,
+        alignRight: newAlignState,
+        dataURL: this.logo.dataURL
+      }
+      this.$store.commit('UPDATE_LOGO', newLogoState)
     },
     switchLogo: function () {
-      const showLogo = this.elements.logo.ctrl['lg-ckbx'].val
-      const img = this.getEl('#custom-logo img')
-      if (!showLogo) {
-        if (!img) return
-        const newCode = this.aframeCode.replace(img.src, '')
-        this.$store.commit('UPDATE_CODE', newCode)
-      } else {
-        let newImg = this.elements.logo.ctrl['lg-inpt'].val = 'https://archilogic-com.github.io/ui-style-guide/3d-io-logo/3d-io-logo-small.svg'
-        const newCode = this.aframeCode.replace('<img src="">', '<img src="' + newImg + '">')
-        this.$store.commit('UPDATE_CODE', newCode)
+      const newLogoState = {
+        src: this.logo.src,
+        width: this.logo.width,
+        showLogo: !this.logo.showLogo,
+        alignRight: this.logo.alignRight,
+        dataURL: this.logo.dataURL
       }
+      this.$store.commit('UPDATE_LOGO', newLogoState)
     },
     pushLogo: function () {
       const newLogo = this.elements.logo.ctrl['lg-inpt'].val
       const logoSize = this.elements.logo.ctrl['lg-width'].val
-      const logoEl = this.getEl('#custom-logo')
-      const imgEl = this.getEl('#custom-logo img')
-      const linkEl = this.getEl('#custom-logo a')
-      let newCode = this.aframeCode
-      if (!logoEl || !imgEl || !linkEl) {
-        if (logoEl) {
-          newCode = newCode.replace(logoEl.outerHTML, htmlSnippets.logo)
-          this.$store.commit('UPDATE_CODE', newCode)
-          this.pushLogo()
-          return
+
+      function toDataUrl (url, callback) {
+        let xhr = new XMLHttpRequest()
+        xhr.onload = function () {
+          let reader = new FileReader()
+          reader.onloadend = function () {
+            callback(reader.result)
+          }
+          reader.readAsDataURL(xhr.response)
         }
+        xhr.open('GET', url)
+        xhr.responseType = 'blob'
+        xhr.send()
       }
-      // check if link contains protokoll
-      const myLink = this.elements.logo.ctrl['lg-link'].val
-      if (myLink && myLink !== '') {
-        this.elements.logo.ctrl['lg-link'].val = myLink.trim()
-        if (!/^http.*:\/\//.test(myLink)) this.elements.logo.ctrl['lg-link'].val = 'http://' + this.elements.logo.ctrl['lg-link'].val
-      }
-      let currentLink
-      if (!imgEl) return
-      // extract link from href attribute - doing linkEl.href works unreliably
-      if (linkEl) currentLink = /href="\S*"/.test(linkEl.outerHTML) && /href="\S*"/.exec(linkEl.outerHTML)[0]
-      // adapt logo size
-      newCode = newCode.replace(/<div id="custom-logo".*>/g, `<div id="custom-logo" style="width:${logoSize}px">`)
-      // replace logo src
-      newCode = newCode.replace(imgEl.src, newLogo)
-      // set new url link for log
-      // console.log('push logo', `${currentLink}`, `href="${this.elements.logo.ctrl['lg-link'].val}"`, linkEl.outerHTML)
-      const logoLink = this.elements.logo.ctrl['lg-link'].val
-      if (currentLink) {
-        newCode = newCode.replace(`<a ${currentLink}`, logoLink ? `<a href="${logoLink}"` : '<a')
-      } else {
-        newCode = newCode.replace(linkEl.outerHTML, linkEl.outerHTML.replace('<a', logoLink ? `<a href="${logoLink}"` : '<a'))
-      }
-      // console.log(newCode)
-      this.$store.commit('UPDATE_CODE', newCode)
+      let dataURL = null
+      let proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+      let targetUrl = newLogo
+      toDataUrl(proxyUrl + targetUrl, (data) => {
+        dataURL = data
+        this.$store.commit('UPDATE_LOGO', {
+          src: newLogo,
+          width: logoSize,
+          showLogo: true,
+          dataURL: dataURL
+        })
+      })
     },
     imageUpload: function (el) {
       if (el.target === 'lg-upload') {
@@ -287,14 +176,9 @@ export default {
       }
     },
     takeScreenshot: function () {
-      html2canvas(document.querySelector('#app-container')).then(canvas => {
-        canvas.toBlob(function (blob) {
-          fileSaver.saveAs(blob, 'myScreenshot.png')
-        })
-      })
+      this.$root.$emit('takeScreenshot')
     },
     changeScreenshotDimensions: function () {
-      console.log(this)
       const widthInput = this.elements.screenshot.ctrl['screenshot-width'].val
       const heightInput = this.elements.screenshot.ctrl['screenshot-height'].val
       const dimensions = {
@@ -303,6 +187,10 @@ export default {
       }
 
       this.$store.commit('UPDATE_SCREENSHOT', dimensions)
+      // trigger a-scene resize
+      window.setTimeout(function () {
+        window.dispatchEvent(new Event('resize'))
+      }, 500)
     }
   }
 }
@@ -444,4 +332,86 @@ export default {
       }
     }
   }
+  .camera-controls {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 100;
+}
+.btn-waypoint, .btn-toggle-play {
+  background-color: rgba(255,255,255,0.9);
+  box-sizing: border-box;
+  display: block;
+  border-radius: 3px;
+  font-size: 14px;
+  color: #333;
+  height: 30px;
+  box-shadow: 1px 1px 2px rgba(0,0,0,.1);
+  transition: all ease 0.3s;
+  cursor: pointer;
+  margin: 0 5px 5px 0;
+  padding: 0 10px;
+  text-decoration: none;
+  border: none;
+  outline: none;
+}
+.btn-waypoint:hover, .btn-toggle-play:hover {
+  background-color: rgba(255,255,255,1);
+  box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+}
+
+.btn-toggle-play {
+  display: none;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  width: 35px;
+  height: 35px;
+  background-image: url('https://spaces-static.archilogic.com/build/170920-121718-65fe40d/e3d/ui/ui-play-black.svg');
+}
+
+/* display play button only if there are waypoints */
+.btn-waypoint + .btn-toggle-play {
+  display: block;
+}
+
+.btn-toggle-play.playing {
+  background-image: url('https://spaces-static.archilogic.com/build/170920-121718-65fe40d/e3d/ui/ui-pause-black.svg');
+}
+
+.camera-mode > .btn {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  margin: 5px 5px 0 0;
+  box-shadow: 1px 1px 2px rgba(0,0,0,.1);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 30px 30px;
+  transition: all ease 0.3s;
+}
+.camera-mode > .btn.camera {
+  background-image: url('https://spaces-static.archilogic.com/build/170920-121718-65fe40d/e3d/ui/icon-camera-black.svg');
+}
+.camera-mode > .btn.bird {
+  background-image: url('https://spaces-static.archilogic.com/build/170711-151653-c61293f/e3d/ui/icon-birdview-black.svg');
+}
+.camera-mode > .btn.person {
+  background-image: url('https://spaces-static.archilogic.com/build/170711-151653-c61293f/e3d/ui/icon-person-black.svg');
+}
+.camera-mode > .btn.camera.active {
+  background-image: url('https://spaces-static.archilogic.com/build/170920-121718-65fe40d/e3d/ui/icon-camera-blue.svg');
+}
+.camera-mode > .btn.bird.active {
+  background-image: url('https://spaces-static.archilogic.com/build/170711-151653-c61293f/e3d/ui/icon-birdview-blue.svg');
+}
+.camera-mode > .btn.person.active {
+  background-image: url('https://spaces-static.archilogic.com/build/170711-151653-c61293f/e3d/ui/icon-person-blue.svg');
+}
+.camera-mode > .btn:hover {
+  box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+}
 </style>

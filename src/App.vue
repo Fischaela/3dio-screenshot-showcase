@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     initApp () {
-      this.$store.dispatch('loadApp', 'default_setup')
+      this.$store.dispatch('loadApp')
     }
   },
   mounted: function () {
