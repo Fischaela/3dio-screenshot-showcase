@@ -6,8 +6,6 @@
 </template>
 
 <script>
-  import io3d from '3dio'
-
   export default {
     name: 'image-upload',
     props: ['imgUrl', 'imgWidth', 'uploadId'],

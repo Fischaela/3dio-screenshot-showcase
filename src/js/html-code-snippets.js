@@ -1,11 +1,8 @@
 module.exports = {
   cameraControls:
 `    <div class="camera-controls">
-      <div class="waypoints">
+      <div id="waypoints" class="waypoints">
         <button class="btn-waypoint" onclick="document.querySelector('[camera]').components['tour'].goTo('Overview')">Overview</button>
-        <button class="btn-toggle-play playing"
-                onclick="this.classList.contains('playing') ? document.querySelector('[camera]').components['tour'].pauseTour() : document.querySelector('[camera]').components['tour'].playTour(), this.classList.toggle('playing')">
-        </button>
       </div>
       <div class="camera-mode">
         <div class="btn camera active"

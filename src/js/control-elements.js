@@ -28,9 +28,8 @@ module.exports = {
       'lg-inpt': {
         condition: 'elements.logo.ctrl.lg-ckbx.val',
         type: 'input',
-        hide: true,
         placeholder: 'enter a url',
-        val: null,
+        val: 'https://raw.githubusercontent.com/archilogic-com/3dio-js/HEAD/3dio-logo.png',
         method: 'pushLogo'
       },
       'lg-text': {
@@ -58,12 +57,12 @@ module.exports = {
         val: 80,
         method: 'pushLogo'
       },
-      'lg-link': {
+      'lg-align': {
         condition: 'elements.logo.ctrl.lg-ckbx.val',
-        type: 'input',
-        placeholder: 'enter a target link',
-        val: null,
-        method: 'pushLogo'
+        label: 'Align right',
+        type: 'checkbox',
+        val: false,
+        method: 'alignLogo'
       }
     }
   },
@@ -76,13 +75,13 @@ module.exports = {
         id: 'bkgrnd-color',
         type: 'checkbox',
         method: 'pushColor',
-        val: true
+        val: false
       },
       'bkgrnd-clr': {
         condition: 'elements.sky.ctrl.bkgrnd-ckbx-clr.val',
         type: 'color',
         val: {
-          hex: '#ffffff'
+          hex: '#FFFFFF'
         },
         method: 'pushColor'
       },
@@ -91,7 +90,7 @@ module.exports = {
         id: 'bkgrnd-img',
         type: 'checkbox',
         method: 'pushSkyImg',
-        val: false
+        val: true
       },
       'bkgrnd-text': {
         condition: 'elements.sky.ctrl.bkgrnd-ckbx-img.val',
@@ -108,14 +107,14 @@ module.exports = {
         label: 'Rotation',
         type: 'slider',
         range: [0, 360],
-        val: 0,
+        val: 290,
         method: 'pushSkyImg'
       },
       'bkgrnd-inpt': {
         condition: 'elements.sky.ctrl.bkgrnd-ckbx-img.val',
         type: 'input',
         placeholder: 'enter your file key',
-        val: null,
+        val: 'https://storage.3d.io/535e624259ee6b0200000484/2017-08-08_15-19-35_C6qRcB/empire_low.jpg',
         method: 'pushSkyImg'
       }
     }
@@ -129,14 +128,14 @@ module.exports = {
         id: 'screenshot-width',
         type: 'input',
         method: 'changeScreenshotDimensions',
-        val: null
+        val: 1024
       },
       'screenshot-height': {
         label: 'Height',
         id: 'screenshot-height',
         type: 'input',
         method: 'changeScreenshotDimensions',
-        val: null
+        val: 768
       },
       'screenshot-btn': {
         label: 'Take Screenshot',
